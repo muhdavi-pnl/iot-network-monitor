@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: iot_postgres
+    environment:
+      POSTGRES_USER: iot
+      POSTGRES_PASSWORD: iotpass
+      POSTGRES_DB: iotdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  mqtt:
+    image: eclipse-mosquitto
+    container_name: iot_mqtt
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
+
+  backend:
+    build: ./backend
+    container_name: iot_backend
+    ports:
+      - "5001:5000"
+    depends_on:
+      - postgres
+      - mqtt
+    environment:
+      DB_HOST: postgres
+      DB_USER: iot
+      DB_PASS: iotpass
+      DB_NAME: iotdb
+      MQTT_BROKER: mqtt
+
+volumes:
+  pgdata:
