@@ -1,17 +1,16 @@
-require('dotenv').config();
-require('./mqtt/subscriber'); // Start MQTT Subscriber
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
+const metricsRoutes = require("./routes/metrics.routes");
+const healthRoutes = require("./routes/health.routes");
 
 const app = express();
-app.use(cors());
+
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.json({ message: 'IoT Network Monitor API Running 🚀' });
-});
+app.use("/api/metrics", metricsRoutes);
+app.use("/api/devices", require("./routes/devices.routes"));
+app.use("/api/dashboard", require("./routes/dashboard.routes"));
+app.use("/health", healthRoutes);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+app.use(require('./middleware/errorHandler'));
+
+module.exports = app;
