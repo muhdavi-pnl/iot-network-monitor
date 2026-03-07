@@ -12,7 +12,7 @@ exports.getSummary = async () => {
   const onlineDevicesResult = await pool.query(
     `SELECT COUNT(DISTINCT device_id)
      FROM metrics
-     WHERE timestamp >= $1`,
+     WHERE created_at >= $1`,
     [onlineThreshold]
   );
 
