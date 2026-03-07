@@ -28,7 +28,7 @@ export default function DeviceTable({ devices }) {
               className="border-b border-slate-700 hover:bg-slate-700"
             >
               <td className="p-3">
-                <Link href={`/devices/${d.device_id}`}>
+                <Link href={`#`}>
                   {d.device_id}
                 </Link>
               </td>
